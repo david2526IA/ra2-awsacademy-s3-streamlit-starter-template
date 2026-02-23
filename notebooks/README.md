@@ -15,6 +15,16 @@ python notebooks/upload_to_s3.py \
   --key data/sensores/iabd01_sensores.json
 ```
 
+Si el JSON viene en un enlace, usa:
+
+```bash
+python notebooks/upload_to_s3.py \
+  --input-url "https://.../sensores.json" \
+  --bucket <TU_BUCKET> \
+  --region <TU_REGION> \
+  --key data/sensores/iabd01_sensores.json
+```
+
 ## Resultado
 - Archivo local normalizado: `notebooks/iabd01_sensores_normalizado.json`
 - Objeto subido a: `s3://<TU_BUCKET>/data/sensores/iabd01_sensores.json`

@@ -32,6 +32,7 @@ Variante usada para acceso a S3 desde EC2:
 
 Datos:
 - `S3_KEY` usada: `data/sensores/iabd01_sensores.json`
+- Fuente JSON usada: `https://raw.githubusercontent.com/iesataulfoargentasor/sensores/refs/heads/main/datos_sensores_febrero_2025.json`
 
 ---
 
@@ -49,12 +50,18 @@ Apoyo adicional:
 Comando ejecutado:
 
 ```bash
+curl -L "https://raw.githubusercontent.com/iesataulfoargentasor/sensores/refs/heads/main/datos_sensores_febrero_2025.json" -o /tmp/datos_sensores_febrero_2025.json
+
 python notebooks/upload_to_s3.py \
-  --input iabd01_sensores.json \
+  --input /tmp/datos_sensores_febrero_2025.json \
   --bucket ra2-streamlit-david-2026 \
   --region us-east-1 \
   --key data/sensores/iabd01_sensores.json
 ```
+
+Resultado esperado en terminal:
+- `Registros origen: 13440`
+- `Subido a: s3://ra2-streamlit-david-2026/data/sensores/iabd01_sensores.json`
 
 ---
 
@@ -79,8 +86,9 @@ aws sts get-caller-identity
 aws s3 ls s3://ra2-streamlit-david-2026/data/sensores/
 ```
 
-- [ ] Captura de `aws sts get-caller-identity` (pendiente especifica)
-  - Archivo sugerido: `docs/capturas/27_sts_get_caller_identity.png`
+- [x] Captura de `aws sts get-caller-identity`
+  - Archivo: `docs/capturas/27_sts_get_caller_identity.png`
+  - ![STS get caller identity](capturas/27_sts_get_caller_identity.png)
 - [x] Captura de `aws s3 ls .../data/sensores/`
   - Archivo: `docs/capturas/24_bucket_content_ok.png`
   - ![Listado bucket y prefijo](capturas/24_bucket_content_ok.png)
@@ -135,7 +143,7 @@ Apoyo adicional (Variante A IAM Role):
   - Archivo: `docs/capturas/19_dashboard_ok_terminal.png`
   - ![Salida streamlit terminal](capturas/19_dashboard_ok_terminal.png)
 - [x] URL final publica
-  - URL: `http://107.22.157.193:8501`
+  - URL: `http://54.82.239.236:8501`
 - [x] Captura en navegador accediendo a la URL
   - Archivo: `docs/capturas/20_dashboard_ok_browser.png`
   - ![Dashboard en navegador](capturas/20_dashboard_ok_browser.png)
@@ -146,6 +154,8 @@ Apoyo adicional (Variante A IAM Role):
 Problemas encontrados y solucion aplicada:
 - Problema 1: error de import (`ModuleNotFoundError: No module named 'app'`) al arrancar Streamlit desde EC2.
 - Solucion 1: arrancar con `PYTHONPATH=. streamlit run app/dashboard.py --server.address 0.0.0.0 --server.port 8501` o usar el script de arranque del repo.
+- Problema 2: con el dataset nuevo no aparecia el mapa porque las coordenadas venian anidadas en `ubicacion.latitud` / `ubicacion.longitud`.
+- Solucion 2: normalizar datos para cargar coordenadas en columnas `lat` y `lon` antes de subir el JSON final a S3.
 
 ---
 

@@ -3,6 +3,7 @@
 Uso:
     python notebooks/upload_to_s3.py \
       --input iabd01_sensores.json \
+      --input-url https://example.com/sensores.json \
       --bucket mi-bucket \
       --region eu-west-1 \
       --key data/sensores/iabd01_sensores.json
@@ -16,6 +17,7 @@ import os
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
+from urllib.request import Request, urlopen
 
 import boto3
 
@@ -36,6 +38,11 @@ STATE_MAP = {
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description="Normaliza JSON IoT y lo sube a S3")
     parser.add_argument("--input", default="iabd01_sensores.json", help="Ruta del JSON de entrada")
+    parser.add_argument(
+        "--input-url",
+        default="",
+        help="URL del JSON de entrada (si se indica, tiene prioridad sobre --input)",
+    )
     parser.add_argument("--bucket", default=os.getenv("S3_BUCKET", ""), help="Nombre del bucket S3")
     parser.add_argument(
         "--key",
@@ -106,6 +113,22 @@ def load_input_json(path: Path) -> list[dict[str, Any]]:
     with path.open("r", encoding="utf-8") as f:
         raw = json.load(f)
 
+    return extract_records(raw)
+
+
+def load_input_json_from_url(url: str) -> list[dict[str, Any]]:
+    if not url.strip():
+        raise ValueError("La URL de entrada no puede estar vacia")
+
+    request = Request(url.strip(), headers={"User-Agent": "ra2-ingesta/1.0"})
+    with urlopen(request, timeout=30) as response:
+        body = response.read()
+    raw = json.loads(body)
+
+    return extract_records(raw)
+
+
+def extract_records(raw: Any) -> list[dict[str, Any]]:
     if isinstance(raw, list):
         return [r for r in raw if isinstance(r, dict)]
     if isinstance(raw, dict):
@@ -136,10 +159,14 @@ def upload_to_s3(bucket: str, key: str, region: str, local_file: Path) -> None:
 def main() -> None:
     args = parse_args()
 
-    input_path = Path(args.input)
     output_path = Path(args.output)
 
-    source_records = load_input_json(input_path)
+    if args.input_url.strip():
+        source_records = load_input_json_from_url(args.input_url)
+    else:
+        input_path = Path(args.input)
+        source_records = load_input_json(input_path)
+
     normalized_records = [normalize_record(r, idx + 1) for idx, r in enumerate(source_records)]
     save_output_json(output_path, normalized_records)
 
