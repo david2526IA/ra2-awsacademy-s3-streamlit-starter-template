@@ -11,9 +11,9 @@ Variante usada para acceso a S3 desde EC2:
 - Alumno/a: `<NOMBRE_APELLIDOS>`
 - Grupo: `<GRUPO>`
 - Variante usada (A/B): `A` (segun captura de role asociado)
-- Region AWS: `<REGION>`
-- Bucket S3: `<NOMBRE_BUCKET>`
-- Repositorio GitHub (fork): `<URL_REPO>`
+- Region AWS: `us-east-1`
+- Bucket S3: `ra2-streamlit-david-2026`
+- Repositorio GitHub (fork): `https://github.com/david2526IA/ra2-awsacademy-s3-streamlit-starter-template`
 
 ---
 
@@ -112,14 +112,18 @@ Apoyo adicional (Variante A IAM Role):
 - [x] Slider de temperatura
   - Archivo: `docs/capturas/20_dashboard_ok_browser.png`
   - ![Dashboard con slider temperatura](capturas/20_dashboard_ok_browser.png)
-- [ ] Tabla filtrada (pendiente captura especifica)
-  - Archivo sugerido: `docs/capturas/28_dashboard_tabla_filtrada.png`
-- [ ] Grafica linea (temperatura vs tiempo) (pendiente captura especifica)
-  - Archivo sugerido: `docs/capturas/29_dashboard_grafica_linea_temperatura.png`
-- [ ] Grafica barras (CO2 por sensor) (pendiente captura especifica)
-  - Archivo sugerido: `docs/capturas/30_dashboard_grafica_barras_co2.png`
-- [ ] Mapa con sensores (pendiente captura especifica)
-  - Archivo sugerido: `docs/capturas/31_dashboard_mapa_sensores.png`
+- [x] Tabla filtrada
+  - Archivo: `docs/capturas/28_dashboard_tabla_filtrada.png`
+  - ![Tabla filtrada](capturas/28_dashboard_tabla_filtrada.png)
+- [x] Grafica linea (temperatura vs tiempo)
+  - Archivo: `docs/capturas/29_dashboard_grafica_linea_temperatura.png`
+  - ![Grafica linea temperatura](capturas/29_dashboard_grafica_linea_temperatura.png)
+- [x] Grafica barras (CO2 por sensor)
+  - Archivo: `docs/capturas/30_dashboard_grafica_barras_co2.png`
+  - ![Grafica barras CO2](capturas/30_dashboard_grafica_barras_co2.png)
+- [x] Mapa con sensores
+  - Archivo: `docs/capturas/31_dashboard_mapa_sensores.png`
+  - ![Mapa sensores](capturas/31_dashboard_mapa_sensores.png)
 
 ---
 
@@ -130,8 +134,8 @@ Apoyo adicional (Variante A IAM Role):
 - [x] Captura de log / salida de ejecucion de Streamlit
   - Archivo: `docs/capturas/19_dashboard_ok_terminal.png`
   - ![Salida streamlit terminal](capturas/19_dashboard_ok_terminal.png)
-- [ ] URL final publica
-  - URL: `http://<IP_PUBLICA_EC2>:8501`
+- [x] URL final publica
+  - URL: `http://107.22.157.193:8501`
 - [x] Captura en navegador accediendo a la URL
   - Archivo: `docs/capturas/20_dashboard_ok_browser.png`
   - ![Dashboard en navegador](capturas/20_dashboard_ok_browser.png)
@@ -150,7 +154,7 @@ Problemas encontrados y solucion aplicada:
 - [x] `docs/evidencias.md` con capturas vinculadas
 - [x] Capturas ordenadas en `docs/capturas/`
 - [x] Sin secretos en el repositorio (revisar antes del push final)
-- [ ] Tag publicado: `v1.0-entrega` (pendiente)
+- [x] Tag publicado: `v1.0-entrega`
 
 Comandos de tag:
 
