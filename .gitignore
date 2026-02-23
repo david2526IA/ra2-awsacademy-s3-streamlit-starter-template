@@ -1,0 +1,19 @@
+# Python
+__pycache__/
+*.py[cod]
+
+# Virtual envs
+.venv/
+venv/
+
+# Local environment/secrets
+.env
+.env.*
+*.pem
+
+# OS/editor noise
+.DS_Store
+Thumbs.db
+
+# Runtime logs
+*.log

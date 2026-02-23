@@ -1,7 +1,22 @@
-# Notebooks / Scripts de carga a S3
+﻿# Notebooks / Scripts de carga a S3
 
-Coloca aquí el notebook (Colab/Local) o script que:
-1) Genera o transforma datos IoT (JSON)
-2) Sube el fichero a `s3://<bucket>/data/sensores/<...>.json`
+Este directorio contiene la parte de ingesta del RA2.
 
-**Importante:** No subas credenciales ni tokens.
+## Archivo principal
+- `upload_to_s3.py`: normaliza datos IoT y sube el JSON a S3.
+
+## Uso recomendado
+
+```bash
+python notebooks/upload_to_s3.py \
+  --input iabd01_sensores.json \
+  --bucket <TU_BUCKET> \
+  --region <TU_REGION> \
+  --key data/sensores/iabd01_sensores.json
+```
+
+## Resultado
+- Archivo local normalizado: `notebooks/iabd01_sensores_normalizado.json`
+- Objeto subido a: `s3://<TU_BUCKET>/data/sensores/iabd01_sensores.json`
+
+Importante: no subir credenciales ni tokens al repositorio.

@@ -1,0 +1,35 @@
+[
+  {
+    "sensor_id": "sensor_01",
+    "latitude": 43.370589,
+    "longitude": -3.220316,
+    "temperatura": 26.56,
+    "humedad": 24.22,
+    "presion": 1060.53,
+    "co2": 565.92,
+    "estado": "Activo",
+    "timestamp": "2025-02-01 00:00:00"
+  },
+  {
+    "sensor_id": "sensor_02",
+    "latitude": 43.462305,
+    "longitude": -3.809980,
+    "temperatura": 18.34,
+    "humedad": 60.10,
+    "presion": 1015.32,
+    "co2": 430.50,
+    "estado": "Inactivo",
+    "timestamp": "2025-02-01 01:00:00"
+  },
+  {
+    "sensor_id": "sensor_03",
+    "latitude": 43.532201,
+    "longitude": -5.661119,
+    "temperatura": 30.21,
+    "humedad": 45.87,
+    "presion": 1008.45,
+    "co2": 610.75,
+    "estado": "Activo",
+    "timestamp": "2025-02-01 02:00:00"
+  }
+]

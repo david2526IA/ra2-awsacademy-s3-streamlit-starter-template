@@ -1,4 +1,4 @@
-from __future__ import annotations
+﻿from __future__ import annotations
 
 import pandas as pd
 
@@ -12,49 +12,70 @@ REQUIRED_COLUMNS = [
     "lon",
 ]
 
+
 def to_dataframe(raw: object) -> pd.DataFrame:
     """Convierte JSON (lista/dict) a DataFrame."""
     if isinstance(raw, list):
         return pd.DataFrame(raw)
     if isinstance(raw, dict):
-        # Si viene como { "data": [...] } o similar, intenta extraer
-        for k in ("data", "records", "items"):
-            if k in raw and isinstance(raw[k], list):
-                return pd.DataFrame(raw[k])
-        # Si no, lo tratamos como un único registro
+        for key in ("data", "records", "items"):
+            if key in raw and isinstance(raw[key], list):
+                return pd.DataFrame(raw[key])
         return pd.DataFrame([raw])
     raise ValueError("Formato JSON no soportado")
 
+
 def ensure_columns(df: pd.DataFrame) -> pd.DataFrame:
-    """Asegura columnas mínimas; si faltan, las crea a NaN."""
-    for c in REQUIRED_COLUMNS:
-        if c not in df.columns:
-            df[c] = pd.NA
-    # normaliza nombres típicos
+    """Asegura columnas minimas y normaliza nombres comunes."""
     rename_map = {
         "temp": "temperature_c",
         "temperature": "temperature_c",
+        "temperatura": "temperature_c",
         "co2": "co2_ppm",
         "state": "sensor_state",
+        "estado": "sensor_state",
         "id": "sensor_id",
         "longitude": "lon",
         "latitude": "lat",
         "time": "timestamp",
     }
-    for old, new in rename_map.items():
-        if old in df.columns and new in df.columns and df[new].isna().all():
-            df[new] = df[old]
-    # tipado
-    for num in ("temperature_c", "co2_ppm", "lat", "lon"):
-        df[num] = pd.to_numeric(df[num], errors="coerce")
+
+    for old_col, new_col in rename_map.items():
+        if old_col in df.columns and new_col not in df.columns:
+            df = df.rename(columns={old_col: new_col})
+        elif old_col in df.columns and new_col in df.columns and df[new_col].isna().all():
+            df[new_col] = df[old_col]
+
+    for col in REQUIRED_COLUMNS:
+        if col not in df.columns:
+            df[col] = pd.NA
+
+    # Normalizacion de estado para la rubrica: OK/WARN/FAIL
+    if "sensor_state" in df.columns:
+        normalized_state = df["sensor_state"].astype(str).str.strip().str.upper().replace(
+            {
+                "ACTIVO": "OK",
+                "ACTIVE": "OK",
+                "INACTIVO": "FAIL",
+                "INACTIVE": "FAIL",
+                "ALERTA": "WARN",
+                "WARNING": "WARN",
+            }
+        )
+        df["sensor_state"] = normalized_state
+
+    for num_col in ("temperature_c", "co2_ppm", "lat", "lon"):
+        df[num_col] = pd.to_numeric(df[num_col], errors="coerce")
+
     return df
 
+
 def parse_time(df: pd.DataFrame) -> pd.DataFrame:
-    """Convierte timestamp a datetime."""
-    # acepta epoch, ISO8601, etc.
+    """Convierte timestamp a datetime UTC."""
     df["timestamp"] = pd.to_datetime(df["timestamp"], errors="coerce", utc=True)
-    # si todo es NaT, no rompemos
+
     if df["timestamp"].isna().all():
-        # crea una marca para que la app no falle
+        # Fallback para no romper la app en datasets sin timestamp valido.
         df["timestamp"] = pd.Timestamp.utcnow()
+
     return df
