@@ -51,8 +51,8 @@ Comando ejecutado:
 ```bash
 python notebooks/upload_to_s3.py \
   --input iabd01_sensores.json \
-  --bucket <TU_BUCKET> \
-  --region <TU_REGION> \
+  --bucket ra2-streamlit-david-2026 \
+  --region us-east-1 \
   --key data/sensores/iabd01_sensores.json
 ```
 
@@ -76,7 +76,7 @@ Comandos:
 
 ```bash
 aws sts get-caller-identity
-aws s3 ls s3://<BUCKET>/data/sensores/
+aws s3 ls s3://ra2-streamlit-david-2026/data/sensores/
 ```
 
 - [ ] Captura de `aws sts get-caller-identity` (pendiente especifica)
